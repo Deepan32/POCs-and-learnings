@@ -1,0 +1,7 @@
+1. Use State()
+    Can be used in function components and not in class components.
+    Hooks execute in same order.
+    Can't be used in if statement().
+    Can't be nested it has to be in top level.
+    const [count,setcount]= useState(initial value)// runs everytime use as function runs once
+    const [count,setcount] = useState()=>{}  
