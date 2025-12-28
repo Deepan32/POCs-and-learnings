@@ -1,7 +1,17 @@
+Hooks 
+    - special function that allow us to use state and other react features in functional component.
+    - functions that make functional component work like class component 
+    - simplify the code,improves the redability , reusability and overall performance of application
+     
+
+
 1. Use State()
     Can be used in function components and not in class components.
+    create state variable and help to track state in components and updates the ui when state chages
     Hooks execute in same order.
     Can't be used in if statement().
     Can't be nested it has to be in top level.
     const [count,setcount]= useState(initial value)// runs everytime use as function runs once
-    const [count,setcount] = useState()=>{}  
+    const [count,setcount] = useState()=>{} 
+     
+

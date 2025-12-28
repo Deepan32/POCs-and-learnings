@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  // Local state for input text
+  const [taskText, setTaskText] = useState("");
+  const [theme,setTheme]=useState("light");
+  //taskText ---> input value
+  //setTaskText ---> input function
+  //Argument for useState is the initial value of state variable
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ minHeight : "100vh",
+      color: theme === "dark" ? "#ffffff" : "#213547",
+      backgroundColor: theme==="light" ? "#ffffff" : "#213547",
+     }}>
+      <h2>Smart Task Dashboard</h2>
+      {/*Theme Toggle Button*/}
+      <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>Change Theme</button><br/>
+      {/* Controll Input */}
+      <input
+        type="text"
+        placeholder="Enter a task"
+        value={taskText}
+        onChange={(e) => setTaskText(e.target.value)}
+      />
+      {/*e means event target mean where the event happened here <input> value means what is typed  */}
+      {/* Just to verify state */}
+      <p>You typed: {taskText}</p>
+    </div>
+  );
 }
 
-export default App
+export default App;
