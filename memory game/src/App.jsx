@@ -1,7 +1,7 @@
 
-import { GameHeader } from "./components/gameheader";
-import Card from "./components/Card";
-import { useState } from "react";
+import { GameHeader } from "./components/GameHeader";
+import {Card} from "./components/Card";
+import { useState,useEffect } from "react";
 const cardValues = [
   "🍎",
   "🍌",
@@ -33,14 +33,32 @@ function App() {
           isFlipped:false,
           isMatched:false,
       })); 
-  setCards(finalCards)
+  setCards(finalCards);
   }
+  useEffect(()=>{
+    initialiseGame();
+  },
+    []);
+    const handleCardClick=(card)=>{
+      if(card.isFlipped||card.isMatched){
+        return;
+      }
+      //Update card flip state
+      const newCards=cards.map((c)=>{
+        if(c.id==card.id){
+          return{...c,isFlipped:true};
+        }else{
+          return c
+        }
+      })
+      setCards(newCards);
+    }
   return (
     <div className="app">
       <GameHeader score={3} moves={10}/>
       <div className="cards-grid">
-        {cardValues.map((card)=>(
-               <Card card={card}/>
+        {cards.map((card)=>(
+               <Card card={card} onClick={handleCardClick}/>
         ))}
       </div>
     </div>
