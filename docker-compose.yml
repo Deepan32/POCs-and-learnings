@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: allstreak-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: allstreak_user
+      POSTGRES_PASSWORD: allstreak_secure_password_2026
+      POSTGRES_DB: allstreak
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U allstreak_user -d allstreak"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: allstreak-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: allstreak-backend
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - APP_NAME=ALLSTREAK
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - DATABASE_URL=postgresql+asyncpg://allstreak_user:allstreak_secure_password_2026@postgres:5432/allstreak
+      - REDIS_URL=redis://redis:6379/0
+      - USE_REDIS=true
+      - JWT_SECRET=allstreak-super-secret-production-jwt-key-change-in-prod-2026
+      - JWT_REFRESH_SECRET=allstreak-super-secret-refresh-key-change-in-prod-2026
+      - META_VERIFY_TOKEN=allstreak_secure_verify_token_2026
+      - META_GRAPH_URL=https://graph.facebook.com
+      - META_API_VERSION=v21.0
+      - DEMO_MODE_ENABLED=true
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: allstreak-frontend
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  redis_data:
